@@ -5,7 +5,7 @@ contactdatabase = {
 flag = True
 counter = 1
 
-    
+
 def menu():
     while flag:
         print("1: Create contact \n 2: Show Contacts \n 3: Search for Contact \n 4: Update contacts \n 5: delete contact \n 6: Generate statistics \n 7: search for duplactated contact \n 8: exit.")
