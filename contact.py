@@ -1,5 +1,5 @@
 from datetime import datetime as time
-
+from collections import Counter
 contactdatabase = {
 }
 flag = True
@@ -167,13 +167,53 @@ def mergeContact(dic):
         mergenum2 = input("what's the second ID number you want to merge? \n -->")
     
 def genstat(dic):
-    print(f'there are {len(dic)} contacts') 
-    print("contacts that are in catagories are")
+    total_contacts = len(dic)
+    contacts_by_category = {}
+    contacts_by_state = {}
+    area_codes = []
+    contacts_without_email = 0
 
-    for i in range(len(dic)):
-        num = i +1
-    if  dic[num]['category']:     
-        print(q)
+    
+    for contact in dic.values():
+        
+        category = contact.get('category', 'Uncategorized')
+        contacts_by_category[category] = contacts_by_category.get(category, 0) + 1
+        
+        
+        state = contact.get('address', {}).get('state', 'Unknown')
+        contacts_by_state[state] = contacts_by_state.get(state, 0) + 1
+        
+        
+        phone_number = contact.get('phone number', '')
+        if phone_number:
+            area_code = phone_number[:3] 
+            area_codes.append(area_code)
+        
+        
+        email = contact.get('email', None)
+        if not email:
+            contacts_without_email += 1
+    
+    
+    total_categories = len(contacts_by_category)
+    average_contacts_per_category = total_contacts / total_categories if total_categories else 0
+    
+    
+    area_code_counts = Counter(area_codes)
+    most_common_area_code = area_code_counts.most_common(1)[0][0] if area_codes else None
+    
+    
+    stats = {
+        'total_contacts': total_contacts,
+        'contacts_by_category': contacts_by_category,
+        'contacts_by_state': contacts_by_state,
+        'average_contacts_per_category': average_contacts_per_category,
+        'most_common_area_code': most_common_area_code,
+        'contacts_without_email': contacts_without_email
+    }
+
+    print(stats) 
+    
 def contactmaker(dic):
     dic.update({counter:{}})
     dic[counter]['First name'] = input("First name: ")
@@ -215,4 +255,4 @@ while flag == True:
    
     if action == '1':
         counter += 1
-    
+        
