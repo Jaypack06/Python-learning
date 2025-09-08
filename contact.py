@@ -8,7 +8,7 @@ counter = 1
 
 def menu():
     while flag:
-        print("1: Create contact \n 2: Show Contacts \n 3: Search for Contact \n 4: Update contacts \n 5: delete contact \n 6: Generate statistics \n 7: search for duplactated contact \n 8: exit.")
+        print("1: Create contact \n 2: Show Contacts \n 3: Search for Contact \n 4: Update contacts \n 5: delete contact \n 6: Generate statistics \n 7: merge contacts \n 8: find duplicate contacts \n 9: exit.")
         num = input('--> ')
         
         if not num.isdigit() :
@@ -34,6 +34,8 @@ def menu():
             return('7')
         elif choice == 8:
             return('8')
+        elif choice == 9:
+            return('9')
 
 def updatecontact(dic):
     showcontact(contactdatabase)
@@ -148,23 +150,58 @@ def searchContact(dic):
         if check in dic[i][key]:
             print(dic[i])
 
-def mergeContact(dic):
-    showcontact(contactdatabase)
-    while True:
-        mergenum1 = input("First ID numbers do you want to Merge? \n -->")
-        if not mergenum1.isdigit():
-            print('Enter the ID number please.')
-            continue
-        if mergenum1 == '':
-            print('Enter the ID number please.')
-            continue
-        if not mergenum2.isdigit():
-            print('Enter the ID number please.')
-            continue
-        if mergenum2 == '':
-            print('Enter the ID number please.')
-            continue
-        mergenum2 = input("what's the second ID number you want to merge? \n -->")
+
+
+def deep_merge_with_prompt(d1, d2):
+    result = d1.copy()
+    for key, val in d2.items():
+        if key in result and isinstance(result[key], dict) and isinstance(val, dict):
+            result[key] = deep_merge_with_prompt(result[key], val)
+        else:
+            if key in result and result[key] and val and result[key] != val:
+                print(f"Conflict in '{key}':")
+                print(f"  [1] {result[key]} (from first contact)")
+                print(f"  [2] {val} (from second contact)")
+                choice = input("Choose 1 or 2: ")
+                result[key] = result[key] if choice == "1" else val
+            else:
+                result[key] = val if val else result.get(key, "")
+    return result
+
+def choose_contacts_to_merge(dic):
+    if not dic:
+        print("No contacts available.")
+        return
+
+    print("\nContacts available:")
+    for cid, contact in dic.items():
+        print(f"[{cid}] {contact.get('First name', '')} {contact.get('Last name', '')}")
+
+    try:
+        id1 = int(input("\nEnter the ID of the first contact to merge: "))
+        id2 = int(input("Enter the ID of the second contact to merge: "))
+    except ValueError:
+        print("Invalid input. Please enter numbers only.")
+        return
+
+    if id1 not in dic or id2 not in dic:
+        print("One or both IDs do not exist.")
+        return
+
+    
+    try:
+        new_id = int(input("Enter the new ID for the merged contact: "))
+    except ValueError:
+        print("Invalid input. Please enter a number.")
+        return
+
+    merged = deep_merge_with_prompt(dic[id1], dic[id2])
+    
+    dic[new_id] = merged
+
+    print(f"\n Contacts {id1} and {id2} merged into new ID {new_id}\n")
+
+
     
 def genstat(dic):
     total_contacts = len(dic)
@@ -230,8 +267,36 @@ def contactmaker(dic):
     dic[counter]['created date'] = time.now()
     dic[counter]['last updated'] = time.now()
 
-def dupcontact(dic):
-    print("couldn't make it happen")
+def find_duplicates(dic):
+    duplicates = []
+
+    checked = set()
+    keys = list(dic.keys())
+
+    for i in range(len(keys)):
+        for j in range(i + 1, len(keys)):
+            id1, id2 = keys[i], keys[j]
+
+            # Avoid re-checking pairs
+            if (id1, id2) in checked or (id2, id1) in checked:
+                continue
+
+            c1, c2 = dic[id1], dic[id2]
+
+            # Define duplicate rules
+            same_name = (c1.get("First name", "").lower() == c2.get("First name", "").lower() and
+                         c1.get("Last name", "").lower() == c2.get("Last name", "").lower())
+
+            same_phone = (c1.get("phone number") and c1.get("phone number") == c2.get("phone number"))
+            same_email = (c1.get("email") and c1.get("email") == c2.get("email"))
+
+            if same_name or same_phone or same_email:
+                duplicates.append((id1, id2))
+
+            checked.add((id1, id2))
+
+    print(duplicates)
+
     
 while flag == True:
     
@@ -249,8 +314,10 @@ while flag == True:
     elif action == '6':
         genstat(contactdatabase)
     elif action == '7':
-        dupcontact(contactdatabase)
+        choose_contacts_to_merge(contactdatabase)
     elif action == '8':
+        find_duplicates(contactdatabase)
+    elif action == '9':
         exit()
    
     if action == '1':
