@@ -167,27 +167,13 @@ def mergeContact(dic):
         mergenum2 = input("what's the second ID number you want to merge? \n -->")
     
 def genstat(dic):
-    print(f'there are {counter} contacts') 
-    catdic = {}
-    for i in range(counter):
-        num = i
-        pass
-    if dic[i]['category']  == '':
-        pass
-    else:
-          catdic.update({'contacts':{}})
-          catdic['contacts']= dic[i]
-    showcontact(catdic)
-    addressdic = {}
-    for i in range(counter):
-        num = i
-        pass
-    if dic[i]['address']  == '':
-        pass
-    else:
-          addressdic.update({'address':{}})
-          catdic['address']= dic[i]
-    showcontact(addressdic)
+    print(f'there are {len(dic)} contacts') 
+    print("contacts that are in catagories are")
+
+    for i in range(len(dic)):
+        num = i +1
+    if  dic[num]['category']:     
+        print(q)
 def contactmaker(dic):
     dic.update({counter:{}})
     dic[counter]['First name'] = input("First name: ")
