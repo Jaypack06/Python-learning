@@ -31,3 +31,41 @@ def create_enrollment_data():
     # Load the data
 course_enrollments, student_schedules = create_enrollment_data()
 
+def find_common_student(course1, course2, enrollments):
+    names1 = []
+    if course1 in enrollments:
+        for i in enrollments[course1]:
+            names1.append(i)
+    names2 = []
+    if course2 in enrollments:
+        for i in enrollments[course2]:
+            names2.append(i)
+    matchingname = []
+    for names in names1:
+        if names in names2:
+            matchingname.append(names)
+    print(matchingname)
+
+def find_popular_combinations(student_schedules):
+    pair_counter = Counter()
+    for courses in student_schedules.values():
+        # Convert to list to access by index
+        course_list = list(courses)
+        
+        # Generate all pairs manually (since we can't use itertools.combinations)
+        for i in range(len(course_list)):
+            for j in range(i + 1, len(course_list)):
+                # Create pair and sort to ensure consistent ordering
+                pair = tuple(sorted([course_list[i], course_list[j]]))
+                pair_counter[pair] += 1
+    
+    # Return pairs sorted by count (most common first)
+    return pair_counter.most_common()
+
+#find_common_student('CS1350', 'MATH2010', course_enrollments)
+
+
+result = find_popular_combinations(student_schedules)
+if result:
+    most_popualr = result[0]
+    print(f"Most popular combination: {most_popualr[0]} taken by {most_popualr[1]} students")
