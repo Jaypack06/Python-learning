@@ -76,7 +76,7 @@ def practice_3c():
 def practice_4a():
     # Check if string starts with "Python"
     texts = ["Python is fun", "I love Python", "Python"]
-    pattern = r"____"  # Fill in pattern to match strings starting with Python
+    pattern = r"Python"  # Fill in pattern to match strings starting with Python
 
     for text in texts:
         if re.search(pattern, text):
@@ -86,8 +86,11 @@ def practice_4b():
     # Validate that a string contains ONLY digits
     test_strings = ["12345", "123abc", "456"]
     # Write pattern to match strings that are entirely digits
+    pattern = r"^\d+$"
     # Use ^ and $ anchors with \d+
-    
+    for txt in test_strings:
+        if re.search(pattern, txt):
+            print(txt)
 def practice_4c():
     # Find all three-letter words ending in 'at'
     text = "The cat sat on the mat with a bat"
@@ -98,7 +101,7 @@ def practice_4c():
 def practice_5a():
     # Find all words (one or more letters)
     text = "Hello 123 world 456"
-    pattern = r"[a-zA-Z]___"  # Fill in the quantifier
+    pattern = r"[a-zA-Z]+"  # Fill in the quantifier
 
     matches = re.findall(pattern, text)
     print(f"Words: {matches}")
@@ -108,9 +111,14 @@ def practice_5b():
     # Format: (555) 123-4567 or 123-4567
     phones = ["(555) 123-4567", "123-4567", "555-1234"]
     # Write pattern using ? for optional area code
+    pattern = r"(\(\d{3}\)\s)?\d{3}-\d{4}"
     # For a group of characters to be optional inside an re pattern
     # use () to group the set of characters
-    
+    for phone in phones:
+        if re.fullmatch(pattern, phone):
+            print(f"Matched {phone}")
+        else:
+            print(f"no match: {phone}")
 def practice_5c():
     # Extract content between quotes (non-greedy)
     text = 'He said "hello" and she said "goodbye" quickly'
@@ -118,4 +126,7 @@ def practice_5c():
     # Use non-greedy matching
     # Expected: ['hello', 'goodbye']
     
-practice_1a()
+
+practice_5a()
+practice_5b()
+practice_4b()

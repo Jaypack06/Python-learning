@@ -1,78 +1,111 @@
 import re
 
-'''
-practice 1_a
-'''
 
-# Match years (exactly 4 digits)
-text = "Born in 1995, graduated 2017, now it's 24"
-pattern = r"\d{___}"  # Fill in the repetition
+def practice1_a():
 
-matches = re.findall(pattern, text)
-print(f"Years found: {matches}")
 
-'''
-practice 1_b
-'''
-# Validate hex color codes (#RGB or #RRGGBB)
-colors = ["#FFF", "#FFFFFF", "#12AB56", "#GGG", "#12"]
-# Write pattern for 3 or 6 hex digits after #
-# Hint: [0-9A-Fa-f]{3} or {6}
+    # Match years (exactly 4 digits)
+    text = "Born in 1995, graduated 2017, now it's 24"
+    pattern = r"\d{4}"  # Fill in the repetition
 
-'''
-practice 1_c
-'''
-# Extract and validate US Social Security Numbers
-# Format: XXX-XX-XXXX where X is a digit
-text = "SSN: 123-45-6789, Invalid: 12-345-6789, 123-4-5678"
-# Write pattern using {n} for each section
+    matches = re.findall(pattern, text)
+    print(f"Years found: {matches}")
+practice1_a()
 
-'''
-practice 2_a
-'''
-# Match repeated words like "very very" or "really really"
-text = "It's very very important and really really cool"
-pattern = r"(\w+) \1"  # Fill in to match repeated words
+def practice1_b():
 
-matches = re.findall(pattern, text)
-print(f"Repeated words: {matches}")
+    # Validate hex color codes (#RGB or #RRGGBB)
+    colors = ["#FFF", "#FFFFFF", "#12AB56", "#GGG", "#12"]
+    # Write pattern for 3 or 6 hex digits after #
+    pattern =  r"^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$"
+    # Hint: [0-9A-Fa-f]{3} or {6}
+    for color in colors:
+        if re.fullmatch(pattern, color):
+            print(f"Valid:   {color}")
+        else:
+            print(f"Invalid: {color}")
+practice1_b()
 
-'''
-practice 2_b
-'''
-# Extract date components (MM/DD/YYYY)
-dates = ["12/25/2024", "01/01/2025", "13/40/2024"]
-# Write pattern with groups for month, day, year
-# Validate and extract each component
+def practice1_c():
 
-'''
-practice 2_c
-'''
-# Parse URLs: protocol://domain/path
-urls = ["http://example.com/page", "https://site.org/path/to/file"]
-# Create groups for protocol, domain, and path
-# Print each component separately
+    # Extract and validate US Social Security Numbers
+    # Format: XXX-XX-XXXX where X is a digit
+    text = "SSN: 123-45-6789, Invalid: 12-345-6789, 123-4-5678"
+    # Write pattern using {n} for each section
+    pattern = r"\b\d{3}-\d{2}-\d{4}\b"
 
-'''
-practice 3_a
-'''
-# Extract name and age from text
-text = "My name is Alice and I am 25 years old"
-pattern = r"name is (\w+) and I am (\d+)"
+    matches = re.findall(pattern, text)
+    print(matches)
+practice1_c()
 
-# Complete the code to print name and age separately
-match = re.search(pattern, text)
-if match:
-    # Print the captured groups
-    pass
+def practice2_a():
 
-'''
-practice 3_b
-'''
-# Parse email addresses with named groups
-emails = ["john.doe@company.com", "alice_smith@university.edu"]
-# Write pattern with named groups for username and domain
-# Pattern: (?P<user>...) @ (?P<domain>...)
+    # Match repeated words like "very very" or "really really"
+    text = "It's very very important and really really cool"
+    pattern = r"(\w+)\s+\1"  # Fill in to match repeated words
+
+    matches = re.findall(pattern, text)
+    print(f"Repeated words: {matches}")
+practice2_a()
+
+def practice2_b():
+
+    # Extract date components (MM/DD/YYYY)
+    dates = ["12/25/2024", "01/01/2025", "13/40/2024"]
+    # Write pattern with groups for month, day, year
+    pattern = r"^(0[1-9]|1[0-2])/(0[1-9]|[12][0-9]|3[01])/(\d{4})$"
+    # Validate and extract each component
+    for date in dates:
+        match = re.match(pattern, date)
+        if match:
+            month, day, year = match.groups()
+            print(f"Valid: {date} → Month={month}, Day={day}, Year={year}")
+        else:
+            print(f"Invalid: {date}")
+practice2_b()
+
+def practice2_c():
+
+    # Parse URLs: protocol://domain/path
+    urls = ["http://example.com/page", "https://site.org/path/to/file"]
+    # Create groups for protocol, domain, and path
+    pattern = r"^(https?)://([\w.-]+)(/.+)$"
+    # Print each component separately
+    for url in urls:
+        match = re.match(pattern, url)
+        if match:
+            protocol, domain, path = match.groups()
+            print(f"URL: {url}")
+            print(f"  Protocol: {protocol}")
+            print(f"  Domain:   {domain}")
+            print(f"  Path:     {path}\n")
+        else:
+            print(f"Invalid URL: {url}")
+practice2_c()
+
+def practice3_a():
+
+    # Extract name and age from text
+    text = "My name is Alice and I am 25 years old"
+    pattern = r"name is (\w+) and I am (\d+)"
+
+    # Complete the code to print name and age separately
+    match = re.search(pattern, text)
+    if match:
+        # Print the captured groups
+        name = match.group(1)
+        age = match.group(2)
+        print(f"Name: {name}")
+        print(f"Age: {age}")
+practice3_a()
+
+def practice3_b():
+
+    # Parse email addresses with named groups
+    emails = ["john.doe@company.com", "alice_smith@university.edu"]
+    # Write pattern with named groups for username and domain
+    pattern = r"^"
+    # Pattern: (?P<user>...) @ (?P<domain>...)
 
 '''
 practice 3_c
