@@ -115,104 +115,169 @@ times = ["12:30:45", "25:00:00", "10:65:30", "09:15:22"]
 # Write pattern with groups for hours, minutes, seconds
 # Validate each component (hours: 00-23, minutes/seconds: 00-59)
 
-'''
-practice 4_a
-'''
-text = "Hello there! Hi everyone. Hey you. Goodbye."
-pattern = r"___"  # Fill in: Match Hello, Hi, or Hey
 
-matches = re.findall(pattern, text)
-print(f"Greetings: {matches}")
+def practice4_a():
 
-'''
-practice 4_b
-'''
-# Validate file extensions for documents
-files = ["report.doc", "image.jpg", "data.xlsx", "notes.txt"]
-# Match .doc, .docx, .pdf, or .txt files
-# Use alternation with proper grouping
+    text = "Hello there! Hi everyone. Hey you. Goodbye."
+    pattern = r"Hello|Hi|Hey"  # Fill in: Match Hello, Hi, or Hey
 
-'''
-practice 4_c
-'''
-# Parse different date formats
-dates = ["2024-01-15", "15/01/2024", "Jan 15, 2024", "January 15, 2024"]
-# Write pattern to match:
-# - YYYY-MM-DD
-# - DD/MM/YYYY
-# - Mon DD, YYYY
-# Use alternation to handle all formats
+    matches = re.findall(pattern, text)
+    print(f"Greetings: {matches}")
+practice4_a()
 
-'''
-practice 5-a
-'''
-# Find a number and print its position
-text = "The temperature is 72 degrees"
-pattern = r"\d+"
+def practice4_b():
 
-match = re.search(pattern, text)
-if match:
-    # Print the number and where it was found
-    # Use match.group() and match.span()
-    pass
+    # Validate file extensions for documents
+    files = ["report.doc", "image.jpg", "data.xlsx", "notes.txt"]
+    # Match .doc, .docx, .pdf, or .txt files
+    # Use alternation with proper grouping
+    pattern = r"\.(docx?|txt|pdf)"
+    for file in files:
+        if re.search(pattern, file):
+            print(file, "valid")
+        else:
+            print(file, "not valid")
+practice4_b()
 
-'''
-practice 5_b
-'''
-# Extract URL components and their positions
-url = "https://www.example.com/path/to/page"
-pattern = r"(https?)://([^/]+)(.*)"
+def practice4_c():
 
-# Use the match object to extract:
-# - Protocol (http or https)
-# - Domain
-# - Path
-# - Position of each component
+    # Parse different date formats
+    dates = ["2024-01-15", "15/01/2024", "Jan 15, 2024", "January 15, 2024"]
+    # Write pattern to match:
+    # - YYYY-MM-DD
+    # - DD/MM/YYYY
+    # - Mon DD, YYYY
+    # Use alternation to handle all formats
+    pattern = r"""^(
+        \d{4}-\d{2}-\d{2}              # YYYY-MM-DD
+        | \d{2}/\d{2}/\d{4}            # DD/MM/YYYY
+        | [A-Z][a-z]{2}\s\d{1,2},\s\d{4}  # Mon DD, YYYY
+        | [A-Z][a-z]+ \s\d{1,2},\s\d{4}   # Month DD, YYYY
+    )$"""
+    for d in dates:
+        if re.match(pattern, d, re.VERBOSE):
+            print(d, " matches")
+        else:
+            print(d, " no match")
+practice4_c()
 
-'''
-practice 5_c
-'''
-# Build a function that returns match details as dictionary
-def get_match_info(text, pattern):
-    """
-    Return dictionary with:
-    - 'found': Boolean
-    - 'match': The matched text
-    - 'groups': All captured groups
-    - 'position': (start, end) tuple
-    - 'before': Text before match
-    - 'after': Text after match
-    """
-    # Implement this function
-    pass
+def practice5_a():
 
-# Test with: "Price: $19.99 (discounted)"
-# Pattern: r"\$(\d+)\.(\d{2})"
+    # Find a number and print its position
+    text = "The temperature is 72 degrees"
+    pattern = r"\d+"
 
-'''
-practice 6_a
-'''
-# Check if string starts with "Hello"
-texts = ["Hello World", "Say Hello", "Hello", "HELLO"]
-pattern = r"Hello"
+    match = re.search(pattern, text)
+    if match:
+        # Print the number and where it was found
+        # Use match.group() and match.span()
+        match = re.search(pattern, text)
+    if match:
+        print("Number found:", match.group())
+        print("Position:", match.span())
+practice5_a()
 
-for text in texts:
-    # Use re.match to check if text starts with Hello
-    # Print whether it matches or not
-    pass
+def practice5_b():
 
-'''
-practice 6_b
-'''
-# Validate phone number format from start of string
-# Format: (XXX) XXX-XXXX or XXX-XXX-XXXX
-phones = ["(555) 123-4567", "555-123-4567", "Call 555-1234", "123-4567"]
-# Write validation using re.match
+    # Extract URL components and their positions
+    url = "https://www.example.com/path/to/page"
+    pattern = r"(https?)://([^/]+)(.*)"
 
-'''
-practice 6_c
-'''
-# Parse variable assignments (var = value)
-assignments = ["x = 10", "name = 'John'", "flag = True", "= invalid", "no equals"]
-# Write pattern to match and extract variable name and value
-# Pattern should match from start: variable_name = value
+    # Use the match object to extract:
+    # - Protocol (http or https)
+    # - Domain
+    # - Path
+    # - Position of each component
+    match = re.search(pattern, url)
+    if match:
+        protocol = match.group(1)
+        domain = match.group(2)
+        path = match.group(3)
+        protocol_position = match.span(1)
+        domain_position = match.span(2)
+        path_position = match.span(3)
+        
+    print(f"protocol: {protocol} position of protocol: {protocol_position}")
+    print(f"domain: {domain} position of domain: {domain_position}")
+    print(f"path: {path} position of path: {path_position}")
+practice5_b()
+
+def practice5_c():
+
+    # Build a function that returns match details as dictionary
+    def get_match_info(text, pattern):
+        match = re.search(pattern, text)
+        if not match:
+            return {
+                "found": False,
+                "match": None,
+                "groups": (),
+                "position": None,
+                "before": text,
+                "after": ""
+            }
+
+        start, end = match.span()
+        return {
+            "found": True,
+            "match": match.group(0),
+            "groups": match.groups(),
+            "position": (start, end),
+            "before": text[:start],
+            "after": text[end:]
+        }
+
+        # Test
+    text = "Price: $19.99 (discounted)"
+    pattern = r"\$(\d+)\.(\d{2})"
+
+    info = get_match_info(text, pattern)
+    print(info)
+practice5_c()
+
+def practice6_a():
+
+    # Check if string starts with "Hello"
+    texts = ["Hello World", "Say Hello", "Hello", "HELLO"]
+    pattern = r"Hello"
+
+    for text in texts:
+        # Use re.match to check if text starts with Hello
+        # Print whether it matches or not
+        if re.match(pattern, text):
+            print(f"{text!r} starts with 'Hello'")
+        else:
+            print(f"{text!r} does not start with 'Hello'")
+practice6_a()
+
+def practice6_b():
+
+    # Validate phone number format from start of string
+    # Format: (XXX) XXX-XXXX or XXX-XXX-XXXX
+    phones = ["(555) 123-4567", "555-123-4567", "Call 555-1234", "123-4567"]
+    # Write validation using re.match
+    pattern = r"^(\(\d{3}\)\s\d{3}-\d{4}|\d{3}-\d{3}-\d{4})$"
+
+    for phone in phones:
+        if re.match(pattern, phone):
+            print(f"{phone!r} valid")
+        else:
+            print(f"{phone!r} invalid")
+practice6_b()
+
+def practice6_c():
+
+    # Parse variable assignments (var = value)
+    assignments = ["x = 10", "name = 'John'", "flag = True", "= invalid", "no equals"]
+    # Write pattern to match and extract variable name and value
+    # Pattern should match from start: variable_name = value
+    pattern = r"^([A-Za-z_]\w*)\s*=\s*(.+)$"
+
+    for stmt in assignments:
+        match = re.match(pattern, stmt)
+        if match:
+            var, val = match.groups()
+            print(f"{stmt!r} variable={var}, value={val}")
+        else:
+            print(f"{stmt!r} not a valid assignment")
+practice6_c()
