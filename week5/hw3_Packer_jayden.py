@@ -91,7 +91,7 @@ def analyze_text(text):
     # Find longest line
     longest_line = max(lines, key=len) if lines else ""
     
-    # Most common word - manual counting
+    # Most common word 
     word_counts = {}
     for word in all_words:
         if word:
@@ -132,18 +132,18 @@ def analyze_text(text):
 def find_patterns(text):
    
     patterns = {
-        'integers': r'\b\d+\b',  # Match whole numbers
-        'decimals': r'\b\d+\.\d+\b',  # Match decimal numbers
-        'words_with_digits': r'\b\w*\d+\w*\b',  # Words containing at least one digit
-        'capitalized_words': r'\b[A-Z][a-z]*\b',  # Words starting with capital letter
-        'all_caps_words': r'\b[A-Z]{2,}\b',  # Words with all capitals (min 2 chars)
-        'repeated_chars': r'\b\w*([a-zA-Z])\1+\w*\b'  # Words with repeated adjacent chars
+        'integers': r'\b\d+\b',  
+        'decimals': r'\b\d+\.\d+\b',  
+        'words_with_digits': r'\b\w*\d+\w*\b',  
+        'capitalized_words': r'\b[A-Z][a-z]*\b',  
+        'all_caps_words': r'\b[A-Z]{2,}\b',  
+        'repeated_chars': r'\b\w*([a-zA-Z])\1+\w*\b'  
     }
     
     result = {}
     for pattern_name, pattern in patterns.items():
         if pattern_name == 'repeated_chars':
-            # For repeated chars, extract full words that have repeated letters
+            
             matches = re.findall(r'\b\w*[a-zA-Z]{2,}\w*\b', text)
             result[pattern_name] = [word for word in matches 
                                   if any(word[i] == word[i+1] for i in range(len(word)-1) 
@@ -157,17 +157,17 @@ def find_patterns(text):
 def validate_format(input_string, format_type):
     
     patterns = {
-        # Phone: (XXX) XXX-XXXX or XXX-XXX-XXXX
+        
         'phone': r'^\(?(\d{3})\)?\s?-?(\d{3})-?(\d{4})$',
-        # Date: MM/DD/YYYY with validation
+        
         'date': r'^(0[1-9]|1[0-2])/(0[1-9]|[12]\d|3[01])/(\d{4})$',
-        # Time: HH:MM AM/PM or HH:MM (24-hour)
+        
         'time': r'^(0?\d|1[0-2]):([0-5]\d)\s?(AM|PM)$|^([01]?\d|2[0-3]):([0-5]\d)$',
-        # Email: username@domain.extension
+        
         'email': r'^([a-zA-Z0-9._%-]+)@([a-zA-Z0-9.-]+)\.([a-zA-Z]{2,})$',
-        # URL: http:// or https:// followed by domain
+        
         'url': r'^https?://([a-zA-Z0-9.-]+\.[a-zA-Z]{2,}).*$',
-        # SSN: XXX-XX-XXXX
+        
         'ssn': r'^(\d{3})-(\d{2})-(\d{4})$'
     }
     
@@ -185,14 +185,14 @@ def validate_format(input_string, format_type):
         parts = {'area_code': match.group(1), 'prefix': match.group(2), 'line': match.group(3)}
     elif format_type == 'date':
         month, day, year = int(match.group(1)), int(match.group(2)), int(match.group(3))
-        # Basic date validation
+        
         if month > 12 or day > 31:
             return (False, None)
         parts = {'month': match.group(1), 'day': match.group(2), 'year': match.group(3)}
     elif format_type == 'time':
-        if match.group(3):  # 12-hour format with AM/PM
+        if match.group(3):  
             parts = {'hour': match.group(1), 'minute': match.group(2), 'period': match.group(3)}
-        else:  # 24-hour format
+        else:  
             parts = {'hour': match.group(4), 'minute': match.group(5)}
     elif format_type == 'email':
         parts = {'username': match.group(1), 'domain': match.group(2), 'extension': match.group(3)}
@@ -208,24 +208,24 @@ def extract_information(text):
     
     result = {}
     
-    # Prices: $X.XX or $X,XXX.XX
+    # Prices
     result['prices'] = re.findall(r'\$\d{1,3}(?:,\d{3})*(?:\.\d{2})?', text)
     
-    # Percentages: X% or X.X%
+    # Percentages
     result['percentages'] = re.findall(r'\d+(?:\.\d+)?%', text)
     
-    # Years: 4-digit years from 1900-2099
+    # Years
     result['years'] = re.findall(r'\b(19|20)\d{2}\b', text)
     
-    # Sentences: complete sentences ending with . ! or ?
+    # Sentences
     sentences = re.split(r'[.!?]+', text)
     result['sentences'] = [s.strip() for s in sentences if s.strip()]
     
-    # Questions: sentences ending with ?
+    # Questions
     questions = re.findall(r'[^.!?]*\?', text)
     result['questions'] = [q.strip() + '?' for q in questions if q.strip()]
     
-    # Quoted text: text in double quotes
+    # Quoted text
     result['quoted_text'] = re.findall(r'"([^"]*)"', text)
     
     return result
@@ -242,10 +242,10 @@ def clean_text_pipeline(text, operations):
     
     for operation in operations:
         if operation == 'trim':
-            # Remove leading/trailing whitespace
+            # Remove whitespace
             current_text = current_text.strip()
         elif operation == 'lowercase':
-            # Convert to lowercase
+            # lowercase
             current_text = current_text.lower()
         elif operation == 'remove_punctuation':
             # Remove all punctuation
@@ -260,7 +260,7 @@ def clean_text_pipeline(text, operations):
             # Remove URLs starting with http/https
             current_text = re.sub(r'https?://\S+', '', current_text)
         elif operation == 'remove_emails':
-            # Remove email addresses
+            # Remove email
             current_text = re.sub(r'\S+@\S+', '', current_text)
         elif operation == 'capitalize_sentences':
             # Capitalize first letter of sentences
@@ -294,26 +294,23 @@ def smart_replace(text, replacements):
     result = text
     
     if replacements.get('censor_phone'):
-        # Replace phone numbers with XXX-XXX-XXXX
+        
         result = re.sub(r'\b\d{3}[-.]?\d{3}[-.]?\d{4}\b', 'XXX-XXX-XXXX', result)
         result = re.sub(r'\(\d{3}\)\s?\d{3}-\d{4}', 'XXX-XXX-XXXX', result)
     
     if replacements.get('censor_email'):
-        # Replace email addresses with [EMAIL]
+        
         result = re.sub(r'\S+@\S+', '[EMAIL]', result)
     
     if replacements.get('fix_spacing'):
-        # Fix spacing around punctuation
         result = re.sub(r'\s*([,.!?;:])\s*', r'\1 ', result)
         result = re.sub(r'\s+', ' ', result).strip()
     
     if replacements.get('expand_contractions'):
-        # Expand contractions
         for contraction, expansion in contractions.items():
             result = re.sub(r'\b' + re.escape(contraction) + r'\b', expansion, result, flags=re.IGNORECASE)
     
     if replacements.get('number_to_word'):
-        # Convert single digits to words
         for digit, word in number_words.items():
             result = re.sub(r'\b' + digit + r'\b', word, result)
     
@@ -333,7 +330,7 @@ def analyze_log_file(log_text):
     
     lines = log_text.strip().split('\n')
     
-    # Pattern to match log entries: [YYYY-MM-DD HH:MM:SS] LEVEL: Message
+    
     log_pattern = r'\[(\d{4}-\d{2}-\d{2}) (\d{2}):(\d{2}):(\d{2})\] (\w+): (.+)'
     
     total_entries = 0
@@ -361,10 +358,10 @@ def analyze_log_file(log_text):
             elif level == 'INFO':
                 info_count += 1
     
-    # Find time range
+    
     time_range = (min(times), max(times)) if times else (None, None)
     
-    # Find most active hour - manual counting
+    
     hour_counts = {}
     for hour in hours:
         hour_counts[hour] = hour_counts.get(hour, 0) + 1
