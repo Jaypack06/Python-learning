@@ -1,0 +1,30 @@
+1. Grading Rubric:
+   * String methods:          
+    * Receipt Formatting     10 out of 10
+    * Data Processing        12 out of 12
+    * Text Analysis          13 out of 13
+   * Regular Expression:     
+    * Pattern Finding        12 out of 10
+    * Format Validation      12 out of 12
+    * Information Extraction 13 out of 13
+   * Combined:                
+    * Cleaning Pipeline      10 out of 10
+    * Smart Replace          10 out of 10
+   * Application:            
+    * Log Analysis           10 out of 10 
+
+Total: 100 out of 100
+
+Great job, Jayden!
+
+   Details:
+   Line 7-8: Great checking out for empty lists
+   Line 57: This assumes that the names come in First Last Other Format
+   Line 74-80: Great checking for empty text String
+   Line 112: Smart
+   Line 114: Smart
+   Line 115: Smart
+   Line 147-150: This will find repeated chars, your regular expression 
+                 for repeated chars should work as well
+   L
+
