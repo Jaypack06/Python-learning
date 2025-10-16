@@ -107,3 +107,33 @@ def practice_2_intermediate():
 
 # Run the exercise
 practice_2_intermediate()
+
+def practice_1_advanced():
+    """
+    Advanced: Build a persistent counter system
+    """
+    print("\n" + "="*50)
+    print("EXERCISE 1.3: Persistent Counter")
+    print("="*50)
+    print("="*50)
+    counter_file_name = "counter.txt"
+    # TODO 1: Check if counter file exists and load value
+    counter_file = open(counter_file_name, "r")
+    counter = int(counter_file.read())
+    counter_file.close()
+    print(f"Loaded existing counter: {counter}")
+    # TODO 2: Increment counter
+    counter += 1
+    print(f"Incremented to: {counter}")
+    # TODO 3: Save updated counter
+    # Your code here to save counter
+    # TODO 4: Create a visit log
+    # Append to a file called "visits.txt"
+    # Include timestamp (you can use a simple counter as timestamp)
+    visit_file = open("visits.txt", "a") # "a" for append
+    # Write something like "Visit #1\n"
+    # TODO 5: Read and display last 5 visits
+    print("\nLast visits:")
+    # Read visits.txt and show last 5 lines
+    # Run the exercise
+    practice_1_advanced()
